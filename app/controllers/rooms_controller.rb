@@ -3,7 +3,7 @@ class RoomsController < ApplicationController
   def create
     @room = Room.create
     @entry1 = Entry.create(room_id: @room.id, user_id: current_user.id)
-    @entry2 = Entry.create(room_params)
+    @entry2 = Entry.create(room_id: @room.id, user_id: params[:entry][:user_id])
     redirect_to room_path(@room)
   end 
 
@@ -13,13 +13,9 @@ class RoomsController < ApplicationController
       @messages = @room.messages
       @message = Message.new
       @entries = @room.entries
+      @myUserId = current_user.id
     else
-      redirect_to request.referer
+      redirect_back(fallback_location: users_path)
     end
-  end
-
-  private 
-  def room_params
-    params.require(:entry).permit(:user_id,:room_id)
   end
 end

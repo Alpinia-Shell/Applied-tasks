@@ -19,15 +19,21 @@
 </table>
 
 <%= render 'users/btn', user: user, options: { class: ""} %>
+
 <% unless user.id == current_user.id %>
-  <% if (current_user.following? user) && (user.following? current_user) %>
+  <% if (current_user.following?(user)) && (user.following?(current_user)) %>
     <% if isRoom == true %>
       <%= link_to "チャットへ", room_path(roomId) %>
     <% else %>
-      <%= link_to "チャットを始める", rooms_path, method: :post %>
+      <%= form_with model: room do |f| %>
+        <%= fields_for entry do |e| %>
+          <%= e.hidden_field :user_id, value: @user.id %>
+        <% end %>
+        <%= f.submit "チャットを始める" %>
+      <% end %>
     <% end %>
   <% end %>
-<% end %>  
+<% end %>
 
 <div class='row'>
   <%= link_to edit_user_path(user), class: "btn btn-outline-secondary btn-block" do %>

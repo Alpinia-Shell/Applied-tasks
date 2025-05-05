@@ -1,0 +1,20 @@
+<% @entries.each do |e| %>
+  <% if @myUserId != e.user.id %>
+    <h2><%= e.user.name %>さんとのトークルーム</h2>
+  <% end %>
+<% end %>
+<%= link_to "ユーザー一覧に戻る",users_path %>
+
+<% if @messages.present? %>
+  <% @messages.each do |m| %>
+    <% @myUserId == m.user.id %>
+    <%= m.user.name %>
+    <%= m.message %>
+  <% end %>
+<% end %>
+
+<%= form_with model: @message do |f| %>
+  <%= f.text_field :message %>
+    <%= f.hidden_field :room_id, value:@room.id %>
+      <%= f.submit "投稿" %>
+  <% end %>
